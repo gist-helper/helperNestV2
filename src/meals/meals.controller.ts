@@ -46,7 +46,7 @@ export class MealsController {
 
     @Post('/speceng')
     getSpecEngMeal(@Body('action', SpecmealEngParamsValidationPipe) specMealDto: SpecMealReqDto) {
-        //console.log(JSON.stringify(specMealDto));
+        //console.log(JSON.stringify(specMealDto.params));
         const langType = Types.LANG_ENG;
         return this.mealService.getSpecMeal(specMealDto, langType);
     }
