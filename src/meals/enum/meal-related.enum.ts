@@ -23,6 +23,8 @@ export enum Types {
     DATE_FRI = 4,
     DATE_SAT = 5,
     DATE_SUN = 6,
+    BLDG1_MOBLIE = 1,
+    BLDG2_MOBLIE = 2,
 }
 
 export enum SpecMealInputKor {

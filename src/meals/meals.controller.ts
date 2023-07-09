@@ -9,6 +9,7 @@ import { SpecMealReqDto } from './dto/req-chatbot-specmeal.dto';
 import { SpecmealEngParamsValidationPipe, SpecmealKorParamsValidationPipe } from './pipes/specmeal-params-validation.pipe';
 import { Types } from './enum/meal-related.enum';
 import { MobileDateMealReqDto } from './dto/req-mobile-datemeal.dto';
+import { MobileDateMealResDto } from './dto/res-mobile-datemeal.dto';
 
 @Controller('meals')
 export class MealsController {
@@ -68,7 +69,13 @@ export class MealsController {
     }
 
     @Get('/date/:year/:month/:day/:bldgType/:langType')
-    getDateMeal(@Param('year') year: number, @Param('month') month: number, @Param('day') day: number, @Param('bldgType') bldgType: number, @Param('langType') langType: number) {
+    getDateMeal(
+        @Param('year') year: number, 
+        @Param('month') month: number, 
+        @Param('day') day: number, 
+        @Param('bldgType') bldgType: number, 
+        @Param('langType') langType: number
+    ): Promise<MobileDateMealResDto> {
         const mobileDateMealReqDto: MobileDateMealReqDto = {
             year,
             month,

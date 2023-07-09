@@ -22,12 +22,8 @@ export class SpecmealKorParamsValidationPipe implements PipeTransform {
     ]
 
     transform(value: any, metadata: ArgumentMetadata) {
-        console.log(value.params)
-        console.log(value.params.dateCustom)
-        console.log(value.params.bld)
         const dateCustom = value.params.dateCustom
         const bld = value.params.bld
-        console.log(dateCustom, bld)
         if(!this.isDateCustomValid(dateCustom)) {
             throw new BadRequestException(`${ErrorMessage.INVALID_SPEC_INPUT_ERROR} (Invalid dateCustom Input: ${dateCustom})`);
         }
@@ -40,7 +36,6 @@ export class SpecmealKorParamsValidationPipe implements PipeTransform {
     }
 
     private isDateCustomValid(dateCustom: any): boolean {
-        console.log()
         const index = this.dateCustomKorOptions.indexOf(dateCustom);
         return index !== -1;
     }

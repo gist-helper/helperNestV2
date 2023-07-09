@@ -7,6 +7,7 @@ import { ChatbotSimpleTextResDto } from './dto/res-chatbot-simpletext.dto';
 import { ErrorMessage, MessagesEng, MessagesKor, SpecMealInputEng, SpecMealInputKor, Types } from './enum/meal-related.enum';
 import { Params, SpecMealReqDto } from './dto/req-chatbot-specmeal.dto';
 import { MobileDateMealReqDto } from './dto/req-mobile-datemeal.dto';
+import { MobileDateMealResDto } from './dto/res-mobile-datemeal.dto';
 
 @Injectable()
 export class MealsService {
@@ -105,8 +106,93 @@ export class MealsService {
 
     }
 
-    getDateMeal(mobileDateMealReqDto: MobileDateMealReqDto) {
+    async getDateMeal(mobileDateMealReqDto: MobileDateMealReqDto): Promise<MobileDateMealResDto> {
+        const { year, month, day, bldgType, langType } = mobileDateMealReqDto
+        if(!this.isDateValid(year, month - 1, day)) 
+            throw new BadRequestException(ErrorMessage.NO_EXIST_DATE_ERROR);
+        
+        const krCurrent = new Date(year, month - 1, day);
+        const breakfastPromise = this.genBreakfast(krCurrent, bldgType, langType);
+        let breakfast = this.mealEmpty[langType];
+        let breakfast_corner = this.mealEmpty[langType];
+        await breakfastPromise.then((breakfastMeal) => {
+            if(breakfastMeal) {
+                if(breakfastMeal.menu.length > 0) breakfast = breakfastMeal.menu;
+                if(breakfastMeal.special.length > 0) breakfast_corner = breakfastMeal.special;
+            }
+        });
 
+        const lunchPromise = this.genLunch(krCurrent, bldgType, langType);
+        let lunch = this.mealEmpty[langType];
+        let lunch_coner = this.mealEmpty[langType];
+        let lunch_bldg1_2 = this.mealEmpty[langType];
+        await Promise.all(lunchPromise).then((lunchs) => {
+            lunchs.forEach((lunchMeal) => {
+                if(lunchMeal) {
+                    if(lunchMeal.bldgType === Types.BLDG1_1ST) {
+                        if(lunchMeal.menu.length > 0) lunch = lunchMeal.menu;
+                        if(lunchMeal.special.length > 0) lunch_coner = lunchMeal.special;
+                    }
+
+                    if(lunchMeal.bldgType === Types.BLDG1_2ND && lunchMeal.menu.length > 0) lunch_bldg1_2 = lunchMeal.menu;
+   
+                    if(lunchMeal.bldgType === Types.BLDG2_1ST) {
+                        if(lunchMeal.menu.length > 0) lunch = lunchMeal.menu;
+                        if(lunchMeal.special.length > 0) lunch_coner = lunchMeal.special;
+                    }
+                }
+            });
+        });
+
+        const dinnerPromise = this.genDinner(krCurrent, bldgType, langType);
+        let dinner = this.mealEmpty[langType];
+        await dinnerPromise.then((dinnerMeal) => {
+            if(dinnerMeal) {
+                if(dinnerMeal.menu.length > 0) dinner = dinnerMeal.menu;
+            }
+        });
+
+        let mobileDateMealResDto: MobileDateMealResDto = new MobileDateMealResDto();
+        return mobileDateMealResDto = {
+            breakfast,
+            breakfast_corner,
+            lunch,
+            lunch_coner,
+            lunch_bldg1_2,
+            dinner
+        }
+    }
+
+    genBreakfast(krCurrent: Date, bldgType: number, langType: number): Promise<Meal> {
+        const date = this.genTimeString(krCurrent);
+        if(bldgType === Types.BLDG1_MOBLIE)
+            return this.mealRepository.getMealByTypeAndDate(Types.BLDG1_1ST, langType, Types.KIND_BREAKFAST, date);
+        if(bldgType === Types.BLDG2_MOBLIE)
+            return this.mealRepository.getMealByTypeAndDate(Types.BLDG2_1ST, langType, Types.KIND_BREAKFAST, date);
+        throw new BadRequestException(ErrorMessage.INVALID_BLDG_ERROR);
+    }
+
+    genLunch(krCurrent: Date, bldgType: number, langType: number): Promise<Meal>[] {
+        const date = this.genTimeString(krCurrent);
+        if(bldgType === Types.BLDG1_MOBLIE)
+            return [
+                this.mealRepository.getMealByTypeAndDate(Types.BLDG1_1ST, langType, Types.KIND_LUNCH, date),
+                this.mealRepository.getMealByTypeAndDate(Types.BLDG1_2ND, langType, Types.KIND_LUNCH, date)
+            ];
+        if(bldgType === Types.BLDG2_MOBLIE)
+            return [
+                this.mealRepository.getMealByTypeAndDate(Types.BLDG2_1ST, langType, Types.KIND_LUNCH, date),    
+            ];
+        throw new BadRequestException(ErrorMessage.INVALID_BLDG_ERROR);
+    }
+
+    genDinner(krCurrent: Date, bldgType: number, langType: number): Promise<Meal> {
+        const date = this.genTimeString(krCurrent);
+        if(bldgType === Types.BLDG1_MOBLIE)
+            return this.mealRepository.getMealByTypeAndDate(Types.BLDG1_1ST, langType, Types.KIND_DINNER, date);
+        if(bldgType === Types.BLDG2_MOBLIE)
+            return this.mealRepository.getMealByTypeAndDate(Types.BLDG2_1ST, langType, Types.KIND_DINNER, date);
+        throw new BadRequestException(ErrorMessage.INVALID_BLDG_ERROR);
     }
 
     private async genMenu(langType: number, krCurrent?: Date, kindType?: number): Promise<string> {
@@ -165,9 +251,9 @@ export class MealsService {
         const d = indexDate + 1;
         
         if(indexDate !== -1) {
-            if(!this.isValid(y, m, d)) 
+            if(!this.isDateValid(y, m, d)) 
                 throw new BadRequestException(ErrorMessage.NO_EXIST_DATE_ERROR);
-            return new Date(new Date(y, m, d));
+            return new Date(y, m, d);
         }
         
         throw new BadRequestException(`${ErrorMessage.INVALID_SPEC_INPUT_ERROR} (Unfiltered Input: ${dateCustom})`);
@@ -184,7 +270,7 @@ export class MealsService {
         }
     }
     
-    private isValid(y: number, m: number, d: number): boolean {
+    private isDateValid(y: number, m: number, d: number): boolean {
         return m >= 0 && m < 12 && d > 0 && d <= this.daysInMonth(m, y);
     }
 
