@@ -14,6 +14,7 @@ export class TypeValidationPipe implements PipeTransform {
         Types.LANG_ENG,
     ]
 
+    // Legacy. Due to difference of Date class between JAVA and Javascript.
     readonly DateTypeOptions = [
         Types.DATE_MON - 1,
         Types.DATE_TUE - 1,
@@ -52,22 +53,22 @@ export class TypeValidationPipe implements PipeTransform {
         return value;
     }
 
-    private isBldgTypeValid(bldgType: any) {
+    private isBldgTypeValid(bldgType: any): boolean {
         const index = this.BldgTypeOptions.indexOf(bldgType);
         return index !== -1;
     }
 
-    private isLangTypeValid(langType: any) {
+    private isLangTypeValid(langType: any): boolean {
         const index = this.LangTypeOptions.indexOf(langType);
         return index !== -1;
     }
 
-    private isDateTypeValid(dateType: any) {
+    private isDateTypeValid(dateType: any): boolean {
         const index = this.DateTypeOptions.indexOf(dateType);
         return index !== -1;
     }
 
-    private isKindTypeValid(kindType: any) {
+    private isKindTypeValid(kindType: any): boolean {
         const index = this.KindTypeoptions.indexOf(kindType);
         return index !== -1;
     }

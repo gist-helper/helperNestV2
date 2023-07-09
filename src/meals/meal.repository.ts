@@ -27,4 +27,19 @@ export class MealRepository extends Repository<Meal> {
         }
         return meal;
     }
+
+    async getMealByTypeAndDate(bldgType: number, langType: number, kindType: number, date: string): Promise<Meal> {
+        const query = this.createQueryBuilder('meal');
+        query.where(
+            'meal.bldgType = :bldgType and meal.langType = :langType and meal.kindType = :kindType and meal.date = :date',
+            {
+                bldgType,
+                langType,
+                kindType,
+                date
+            }
+        )
+        const meal = await query.getOne();
+        return meal;
+    }
 }

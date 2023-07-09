@@ -61,7 +61,8 @@ export enum ErrorMessage {
     INVALID_BLDG_ERROR = "유효하지 않은 빌딩 타입입니다. (BldgType can be only 1(1학) or 2(2학))",
     INVALID_LANG_ERROR = "유효하지 않은 언어 타입입니다. (LangType can be only 0(KOR) or 1(ENG))",
     INVALID_DATE_ERROR = "유효하지 않은 날짜 타입입니다. (DateType can be only 1(Mon) to 7(SUN)",
-    INVALID_KIND_ERROR = "유효하지 않은 식단 타입입니다. (KindType can be only 0 to 5, refer documnet."
+    INVALID_KIND_ERROR = "유효하지 않은 식단 타입입니다. (KindType can be only 0 to 5, refer documnet.",
+    INVALID_SPEC_INPUT_ERROR = "정의되지 않은 입력입니다.",
 }
 
 export enum MessagesKor {

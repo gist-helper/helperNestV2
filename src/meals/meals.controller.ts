@@ -4,6 +4,10 @@ import { CreateMealDto } from './dto/req-create-meal.dto';
 import { TypeValidationPipe } from './pipes/createmeal-type-validation.pipe';
 import { Meal } from './meal.entity';
 import { typeORMconfig } from 'src/configs/typeorm.config';
+import { ChatbotSimpleTextResDto } from './dto/res-chatbot-simpletext.dto';
+import { SpecMealReqDto } from './dto/req-chatbot-specmeal.dto';
+import { SpecmealEngParamsValidationPipe, SpecmealKorParamsValidationPipe } from './pipes/specmeal-params-validation.pipe';
+import { Types } from './enum/meal-related.enum';
 
 @Controller('meals')
 export class MealsController {
@@ -22,23 +26,29 @@ export class MealsController {
     }
 
     @Post('/kor')
-    getNowKorMeal() {
-        console.log('kor')
+    getNowKorMeal(): Promise<ChatbotSimpleTextResDto> {
+        const langType = Types.LANG_KOR;
+        return this.mealService.getNowMeal(langType);
     }
 
     @Post('/eng') 
-    getNowEngMeal() {
-
+    getNowEngMeal(): Promise<ChatbotSimpleTextResDto> {
+        const langType = Types.LANG_ENG;
+        return this.mealService.getNowMeal(langType);
     }
 
     @Post('/speckor')
-    getSpecKorMeal() {
-
+    getSpecKorMeal(@Body('action', SpecmealKorParamsValidationPipe) specMealDto: SpecMealReqDto) {
+        //console.log(JSON.stringify(specMealDto.params));
+        const langType = Types.LANG_KOR;
+        return this.mealService.getSpecMeal(specMealDto, langType);
     }
 
     @Post('/speceng')
-    getSpecEngMeal() {
-
+    getSpecEngMeal(@Body('action', SpecmealEngParamsValidationPipe) specMealDto: SpecMealReqDto) {
+        //console.log(JSON.stringify(specMealDto));
+        const langType = Types.LANG_ENG;
+        return this.mealService.getSpecMeal(specMealDto, langType);
     }
 
     @Post('/imagebldg1')
