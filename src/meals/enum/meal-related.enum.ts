@@ -1,3 +1,9 @@
+// legacy!
+// for our policy MON - SUN (0 - 6)
+// in javasript SUN - SAT (0 - 6)
+// in java MON - SUN (1 - 7)
+// in mobile app MON - SUN (1 - 7)
+
 export enum Types {
     LANG_KOR = 0,
     LANG_ENG = 1,
@@ -10,13 +16,13 @@ export enum Types {
     KIND_LUNCH_CORNER = 3,
     KIND_LUNCH_BLDG1_2 = 4,
     KIND_BREAKFAST_CORNER = 5,
-    DATE_MON = 1,
-    DATE_TUE = 2,
-    DATE_WED = 3,
-    DATE_THR = 4,
-    DATE_FRI = 5,
-    DATE_SAT = 6,
-    DATE_SUN = 7,
+    DATE_MON = 0,
+    DATE_TUE = 1,
+    DATE_WED = 2,
+    DATE_THR = 3,
+    DATE_FRI = 4,
+    DATE_SAT = 5,
+    DATE_SUN = 6,
 }
 
 export enum SpecMealInputKor {

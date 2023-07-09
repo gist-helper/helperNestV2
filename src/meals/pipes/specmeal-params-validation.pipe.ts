@@ -12,7 +12,7 @@ export class SpecmealKorParamsValidationPipe implements PipeTransform {
         SpecMealInputKor.FRI,
         SpecMealInputKor.SAT,
         SpecMealInputKor.SUN,
-        ...Array.from({length: 30}, (v,i)=>`${i + 1}${SpecMealInputKor.DAY}`)
+        ...Array.from({length: 31}, (v,i)=>`${i + 1}${SpecMealInputKor.DAY}`)
     ]
 
     readonly bldKorOptions = [
@@ -66,7 +66,7 @@ export class SpecmealEngParamsValidationPipe implements PipeTransform {
         `${1}${SpecMealInputEng.DAY_1}`,
         `${2}${SpecMealInputEng.DAY_2}`,
         `${3}${SpecMealInputEng.DAY_3}`,
-        ...Array.from({length:27}, (v,i)=>`${i + 4}${SpecMealInputEng.DAY_OTHER}`)
+        ...Array.from({length: 28}, (v,i)=>`${i + 4}${SpecMealInputEng.DAY_OTHER}`)
     ]
 
     readonly bldKorOptions = [

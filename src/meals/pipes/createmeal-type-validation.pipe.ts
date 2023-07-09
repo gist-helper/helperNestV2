@@ -13,16 +13,15 @@ export class TypeValidationPipe implements PipeTransform {
         Types.LANG_KOR,
         Types.LANG_ENG,
     ]
-
-    // Legacy. Due to difference of Date class between JAVA and Javascript.
+    
     readonly DateTypeOptions = [
-        Types.DATE_MON - 1,
-        Types.DATE_TUE - 1,
-        Types.DATE_WED - 1,
-        Types.DATE_THR - 1,
-        Types.DATE_FRI - 1,
-        Types.DATE_SAT - 1,
-        Types.DATE_SUN - 1, 
+        Types.DATE_MON,
+        Types.DATE_TUE,
+        Types.DATE_WED,
+        Types.DATE_THR,
+        Types.DATE_FRI,
+        Types.DATE_SAT,
+        Types.DATE_SUN, 
     ]
 
     readonly KindTypeoptions = [

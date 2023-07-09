@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { MealsService } from './meals.service';
 import { CreateMealDto } from './dto/req-create-meal.dto';
 import { TypeValidationPipe } from './pipes/createmeal-type-validation.pipe';
@@ -8,6 +8,7 @@ import { ChatbotSimpleTextResDto } from './dto/res-chatbot-simpletext.dto';
 import { SpecMealReqDto } from './dto/req-chatbot-specmeal.dto';
 import { SpecmealEngParamsValidationPipe, SpecmealKorParamsValidationPipe } from './pipes/specmeal-params-validation.pipe';
 import { Types } from './enum/meal-related.enum';
+import { MobileDateMealReqDto } from './dto/req-mobile-datemeal.dto';
 
 @Controller('meals')
 export class MealsController {
@@ -51,18 +52,30 @@ export class MealsController {
         return this.mealService.getSpecMeal(specMealDto, langType);
     }
 
+    @Post('/createimage')
+    createMealImage() {
+        return this.mealService.createMealImage();
+    }
+
     @Post('/imagebldg1')
     getBldg1Image() {
-
+        return this.mealService.getBldg1Image();
     }
 
     @Post('/imageBldg2')
     getBldg2Image() {
-
+        return this.mealService.getBldg2Image();
     }
 
     @Get('/date/:year/:month/:day/:bldgType/:langType')
-    getDateMeal() {
-        
+    getDateMeal(@Param('year') year: number, @Param('month') month: number, @Param('day') day: number, @Param('bldgType') bldgType: number, @Param('langType') langType: number) {
+        const mobileDateMealReqDto: MobileDateMealReqDto = {
+            year,
+            month,
+            day,
+            bldgType,
+            langType
+        }
+        return this.mealService.getDateMeal(mobileDateMealReqDto);
     }
 }
