@@ -8,6 +8,7 @@ import { ErrorMessage, MessagesEng, MessagesKor, SpecMealInputEng, SpecMealInput
 import { Params, SpecMealReqDto } from './dto/req-chatbot-specmeal.dto';
 import { MobileDateMealReqDto } from './dto/req-mobile-datemeal.dto';
 import { MobileDateMealResDto } from './dto/res-mobile-datemeal.dto';
+import { MealImageRepository } from './mealimage.repository';
 
 @Injectable()
 export class MealsService {
@@ -76,7 +77,10 @@ export class MealsService {
 
     constructor(
         @InjectRepository(MealRepository)
-        private mealRepository: MealRepository
+        private mealRepository: MealRepository,
+
+        @InjectRepository(MealImageRepository)
+        private mealImageRepository: MealImageRepository
     ) {}
 
     createMeal(createMealDto: CreateMealDto): Promise<Meal> {
@@ -94,8 +98,11 @@ export class MealsService {
         return this.genSimpleTextRes(this.genMenu(langType, nextMealTime, kindType))
     }
 
-    createMealImage() {
-
+    createMealImage(files: Express.Multer.File) {
+        const fileName = `${files.filename}`;
+        console.log(fileName);
+        const newMeal = this.mealImageRepository.createImage(fileName);
+        return newMeal;
     }
 
     getBldg1Image() {
@@ -163,7 +170,7 @@ export class MealsService {
         }
     }
 
-    genBreakfast(krCurrent: Date, bldgType: number, langType: number): Promise<Meal> {
+    private genBreakfast(krCurrent: Date, bldgType: number, langType: number): Promise<Meal> {
         const date = this.genTimeString(krCurrent);
         if(bldgType === Types.BLDG1_MOBLIE)
             return this.mealRepository.getMealByTypeAndDate(Types.BLDG1_1ST, langType, Types.KIND_BREAKFAST, date);
@@ -172,7 +179,7 @@ export class MealsService {
         throw new BadRequestException(ErrorMessage.INVALID_BLDG_ERROR);
     }
 
-    genLunch(krCurrent: Date, bldgType: number, langType: number): Promise<Meal>[] {
+    private genLunch(krCurrent: Date, bldgType: number, langType: number): Promise<Meal>[] {
         const date = this.genTimeString(krCurrent);
         if(bldgType === Types.BLDG1_MOBLIE)
             return [
@@ -186,7 +193,7 @@ export class MealsService {
         throw new BadRequestException(ErrorMessage.INVALID_BLDG_ERROR);
     }
 
-    genDinner(krCurrent: Date, bldgType: number, langType: number): Promise<Meal> {
+    private genDinner(krCurrent: Date, bldgType: number, langType: number): Promise<Meal> {
         const date = this.genTimeString(krCurrent);
         if(bldgType === Types.BLDG1_MOBLIE)
             return this.mealRepository.getMealByTypeAndDate(Types.BLDG1_1ST, langType, Types.KIND_DINNER, date);

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { MealsService } from './meals.service';
 import { CreateMealDto } from './dto/req-create-meal.dto';
 import { TypeValidationPipe } from './pipes/createmeal-type-validation.pipe';
@@ -10,6 +10,8 @@ import { SpecmealEngParamsValidationPipe, SpecmealKorParamsValidationPipe } from
 import { Types } from './enum/meal-related.enum';
 import { MobileDateMealReqDto } from './dto/req-mobile-datemeal.dto';
 import { MobileDateMealResDto } from './dto/res-mobile-datemeal.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/utils/fileupload';
 
 @Controller('meals')
 export class MealsController {
@@ -54,8 +56,12 @@ export class MealsController {
     }
 
     @Post('/createimage')
-    createMealImage() {
-        return this.mealService.createMealImage();
+    @UseInterceptors(FilesInterceptor('file'))
+    createMealImage(
+        @UploadedFiles() files: Express.Multer.File
+    ) {
+        console.log(files)
+        //return this.mealService.createMealImage(files);
     }
 
     @Post('/imagebldg1')

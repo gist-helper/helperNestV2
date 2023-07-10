@@ -1,8 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class MealImage extends BaseEntity {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
     bldgType: number;
 
     @Column()
@@ -17,7 +20,7 @@ export class MealImage extends BaseEntity {
     @Column()
     cache: number;
 
-    getIamgeName() {
+    getIamgeUrl() {
         return `${this.name}.${this.cache}.${this.ext}`;
     }
 }
