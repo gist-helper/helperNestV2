@@ -6,10 +6,10 @@ export class MealImage extends BaseEntity {
     id: number;
 
     @Column()
-    bldgType: number;
+    langType: number;
 
     @Column()
-    bldg: string;
+    bldgType: number;
 
     @Column()
     name: string;

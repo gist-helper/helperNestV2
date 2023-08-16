@@ -9,12 +9,17 @@ import { ErrorMessage } from "./enum/meal-related.enum";
 @CustomRepository(MealImage)
 export class MealImageRepository extends Repository<MealImage> {
     async createImage(fileName: string): Promise<MealImage> {
+        const bldgMeta = fileName.split('.')[0];
+        const bldgType = parseInt(bldgMeta.split('_')[0], 10);
+        const langType = parseInt(bldgMeta.split('_')[1], 10);
+        const ext = fileName.split('.')[1];
+        
         const mealimage = this.create({
-            bldgType: 0,
-            bldg: "1",
+            langType: langType,
+            bldgType: bldgType,
             name: fileName,
-            ext: 'jpg',
-            cache: 10,
+            ext: ext,
+            cache: 20,
         })
         await this.save(mealimage);
         return mealimage;

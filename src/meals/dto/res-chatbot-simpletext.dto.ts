@@ -1,4 +1,3 @@
-
 import { IsNotEmpty } from "class-validator"
 
 interface Response {

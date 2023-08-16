@@ -61,7 +61,7 @@ export class MealsController {
         @UploadedFiles() files: Express.Multer.File
     ) {
         console.log(files)
-        //return this.mealService.createMealImage(files);
+        return this.mealService.createMealImage(files);
     }
 
     @Post('/imagebldg1')

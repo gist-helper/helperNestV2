@@ -10,6 +10,10 @@ import { MobileDateMealReqDto } from './dto/req-mobile-datemeal.dto';
 import { MobileDateMealResDto } from './dto/res-mobile-datemeal.dto';
 import { MealImageRepository } from './mealimage.repository';
 
+import * as fs from 'fs';
+import * as path from 'path';
+import { ChatbotSimpleImageResDto } from './dto/res-chatbot-image.dto';
+
 @Injectable()
 export class MealsService {
     private readonly oneDayDiff: number = 24 * 60 * 60 * 1000;
@@ -98,19 +102,28 @@ export class MealsService {
         return this.genSimpleTextRes(this.genMenu(langType, nextMealTime, kindType))
     }
 
-    createMealImage(files: Express.Multer.File) {
-        const fileName = `${files.filename}`;
+    createMealImage(file: Express.Multer.File) {
+        console.log(file[0])
+        const fileName = `${file[0].originalname}`;
         console.log(fileName);
-        const newMeal = this.mealImageRepository.createImage(fileName);
-        return newMeal;
+        // 만약 파일 이름이 존재하지 않으면
+        if(false) {
+
+        }
+        // DB 생성하고
+        // const newMeal = this.mealImageRepository.createImage(fileName);
+        // 파일 메타데이터 저장
+
+        fs.writeFileSync(path.join(__dirname, `../../public/${fileName}`), file[0].buffer);
+        return;
     }
 
     getBldg1Image() {
-
+        //return this.genSimpleImageRes();
     }
 
     getBldg2Image() {
-
+        //return this.genSimpleImageRes();
     }
 
     async getDateMeal(mobileDateMealReqDto: MobileDateMealReqDto): Promise<MobileDateMealResDto> {
@@ -360,5 +373,29 @@ export class MealsService {
             },
         }
         return chatbotSimpleTextResDto;
+    }
+
+    private async genSimpleImageRes(imageUrl: Array<string>, altText: Array<string>): Promise<ChatbotSimpleImageResDto> {
+        let chatbotSimpleImageResDto: ChatbotSimpleImageResDto = new ChatbotSimpleImageResDto();
+        chatbotSimpleImageResDto = {
+            response: {
+                template: {
+                    outputs: [
+                    ]
+                },
+                version: "2.0"
+            }
+        }
+
+        for(var i = 0 ; i < imageUrl.length ; i++) {
+            chatbotSimpleImageResDto.response.template.outputs.push({
+                simpleImage: {
+                    altText: altText[i],
+                    imageUrl: imageUrl[i]
+                }
+            })
+        }
+
+        return chatbotSimpleImageResDto;
     }
 }
