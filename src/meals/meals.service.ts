@@ -118,12 +118,27 @@ export class MealsService {
         return;
     }
 
-    getBldg1Image() {
-        //return this.genSimpleImageRes();
+    getBldg1Image(): Promise<ChatbotSimpleImageResDto> {
+        const staticPath = path.join(__dirname, '../../public')
+        return this.genSimpleImageRes(
+            [
+                path.join(staticPath, '0_0.jpg'),
+                path.join(staticPath, '0_1.jpg'),
+                path.join(staticPath, '1_0.jpg'),
+            ],
+            ['1학생회관 1층 한글', '1학생회관 1층 영어', '1학생회관 2층 한글'],
+        );
     }
 
-    getBldg2Image() {
-        //return this.genSimpleImageRes();
+    getBldg2Image(): Promise<ChatbotSimpleImageResDto> {
+        const staticPath = path.join(__dirname, '../../public')
+        return this.genSimpleImageRes(
+            [
+                path.join(staticPath, '2_0.jpg'),
+                path.join(staticPath, '2_1.jpg'),
+            ],
+            ['2학생회관 1층 한글', '2학생회관 1층 영어'],
+        );
     }
 
     async getDateMeal(mobileDateMealReqDto: MobileDateMealReqDto): Promise<MobileDateMealResDto> {

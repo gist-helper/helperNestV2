@@ -12,6 +12,7 @@ import { MobileDateMealReqDto } from './dto/req-mobile-datemeal.dto';
 import { MobileDateMealResDto } from './dto/res-mobile-datemeal.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/utils/fileupload';
+import { ChatbotSimpleImageResDto } from './dto/res-chatbot-image.dto';
 
 @Controller('meals')
 export class MealsController {
@@ -65,12 +66,12 @@ export class MealsController {
     }
 
     @Post('/imagebldg1')
-    getBldg1Image() {
+    getBldg1Image(): Promise<ChatbotSimpleImageResDto> {
         return this.mealService.getBldg1Image();
     }
 
     @Post('/imageBldg2')
-    getBldg2Image() {
+    getBldg2Image(): Promise<ChatbotSimpleImageResDto> {
         return this.mealService.getBldg2Image();
     }
 
