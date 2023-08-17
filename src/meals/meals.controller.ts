@@ -3,7 +3,6 @@ import { MealsService } from './meals.service';
 import { CreateMealDto } from './dto/req-create-meal.dto';
 import { TypeValidationPipe } from './pipes/createmeal-type-validation.pipe';
 import { Meal } from './meal.entity';
-import { typeORMconfig } from 'src/configs/typeorm.config';
 import { ChatbotSimpleTextResDto } from './dto/res-chatbot-simpletext.dto';
 import { SpecMealReqDto } from './dto/req-chatbot-specmeal.dto';
 import { SpecmealEngParamsValidationPipe, SpecmealKorParamsValidationPipe } from './pipes/specmeal-params-validation.pipe';
@@ -11,10 +10,11 @@ import { Types } from './enum/meal-related.enum';
 import { MobileDateMealReqDto } from './dto/req-mobile-datemeal.dto';
 import { MobileDateMealResDto } from './dto/res-mobile-datemeal.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { multerOptions } from 'src/utils/fileupload';
 import { ChatbotSimpleImageResDto } from './dto/res-chatbot-image.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('meals')
+@ApiTags('Meals')
 export class MealsController {
     constructor(private mealService: MealsService) {}
 
